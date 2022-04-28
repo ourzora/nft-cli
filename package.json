@@ -1,0 +1,28 @@
+{
+  "name": "@zoralabs/nft-cli",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "author": "iain <iain@zora.co>",
+  "license": "MIT",
+  "bin": {
+    "@zoralabs/nft-cli": "bin/nft",
+    "nft": "bin/nft"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.182",
+    "@zoralabs/zdk-alpha": "file:.yalc/@zoralabs/zdk-alpha",
+    "chalk": "^5.0.1",
+    "commander": "^9.2.0",
+    "lodash": "^4.17.21",
+    "ts-lib": "^0.0.5"
+  },
+  "devDependencies": {
+    "typescript": "4.6.3"
+  }
+}
