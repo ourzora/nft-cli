@@ -7,6 +7,7 @@ import { InvalidArgumentError } from "commander";
 import { get, isObject, flatMap } from "lodash";
 // @ts-ignore
 import Gauge from "gauge";
+import { PAGE_LIMIT } from "./constants";
 
 // from stackoverflow
 const getSchema: any = (val: any, keys = []) =>
@@ -72,19 +73,19 @@ export async function fetchLoop<T>(
 
   const pulseInterval = setInterval(() => {
     gauge.pulse(`Fetched ${mintsFull.length} records...`);
-    gauge.show(`Downloading page #${pageCount + 1}.`);
+    gauge.show(`Downloading page #${pageCount}.`);
   }, 200);
 
   gauge.show("Fetching...");
 
-  const limit = Math.min(userLimit, maxLimit);
+  const fullLimit = Math.min(userLimit, maxLimit);
   let offset = 0;
   do {
-    mintsPage = await fetchFn(offset, limit);
+    mintsPage = await fetchFn(offset, Math.min(fullLimit, PAGE_LIMIT));
     pageCount += 1;
     mintsFull = mintsFull.concat(mintsPage);
     offset = mintsFull.length;
-  } while (mintsPage.length > 0 && mintsFull.length <= limit);
+  } while (mintsPage.length > 0 && mintsFull.length <= fullLimit);
 
   clearInterval(pulseInterval);
   gauge.hide();
