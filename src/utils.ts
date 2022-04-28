@@ -1,6 +1,12 @@
 import { ZDK } from "@zoralabs/zdk-alpha/dist/src";
-import { Chain, Network } from "@zoralabs/zdk-alpha/dist/src/queries/queries-sdk";
+import {
+  Chain,
+  Network,
+} from "@zoralabs/zdk-alpha/dist/src/queries/queries-sdk";
+import { InvalidArgumentError } from "commander";
 import { get, isObject, flatMap } from "lodash";
+// @ts-ignore
+import Gauge from "gauge";
 
 // from stackoverflow
 const getSchema: any = (val: any, keys = []) =>
@@ -16,7 +22,75 @@ export function commaSeperatedList(value: string, _previous: any) {
   return value.split(",");
 }
 
-export const networksDefault = [{ network: Network.Ethereum, chain: Chain.Mainnet }];
+export function argumentAsIntDefault(defaultInt: number) {
+  return (value: string, _previous: any) => {
+    if (!value) {
+      return defaultInt;
+    }
+    // parseInt takes a string and a radix
+    const parsedValue = parseInt(value, 10);
+    if (isNaN(parsedValue)) {
+      throw new InvalidArgumentError("Not a number.");
+    }
+    return parsedValue;
+  };
+}
+
+export const networksDefault = [
+  { network: Network.Ethereum, chain: Chain.Mainnet },
+];
+
+export async function fetchLoop<T>(
+  fetchFn: (offset: number, limit: number) => Promise<T[]>,
+  userLimit: number,
+  maxLimit = 10000
+) {
+  let mintsFull: T[] = [];
+  let mintsPage: T[] = [];
+
+  const gauge = new Gauge();
+
+  gauge.setTemplate([
+    {
+      type: "activityIndicator",
+      kerning: 1,
+      length: 1,
+    },
+    {
+      type: "section",
+      kerning: 1,
+      default: "",
+    },
+    {
+      type: "subsection",
+      kerning: 1,
+      default: "",
+    },
+  ]);
+
+  let pageCount = 1;
+
+  const pulseInterval = setInterval(() => {
+    gauge.pulse(`Fetched ${mintsFull.length} records...`);
+    gauge.show(`Downloading page #${pageCount + 1}.`);
+  }, 200);
+
+  gauge.show("Fetching...");
+
+  const limit = Math.min(userLimit, maxLimit);
+  let offset = 0;
+  do {
+    mintsPage = await fetchFn(offset, limit);
+    pageCount += 1;
+    mintsFull = mintsFull.concat(mintsPage);
+    offset = mintsFull.length;
+  } while (mintsPage.length > 0 && mintsFull.length <= limit);
+
+  clearInterval(pulseInterval);
+  gauge.hide();
+
+  return mintsFull;
+}
 
 export function processResult(
   fields: string[] = [],

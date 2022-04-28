@@ -4,7 +4,7 @@ import {
   SortDirection,
 } from "@zoralabs/zdk-alpha/dist/src/queries/queries-sdk";
 import { Command } from "commander";
-import { commaSeperatedList, getZdk, processResult } from "../utils";
+import { argumentAsIntDefault, commaSeperatedList, fetchLoop, getZdk, processResult } from "../utils";
 
 const MINTS_SORT_FIELD_MAP = {
   time: MintSortKey.Time,
@@ -39,7 +39,7 @@ export function mintsCommand(program: Command): void {
       "limit fields to show (useful for csv options)",
       commaSeperatedList
     )
-    .option("-l, --limit <limit>", "limit number of results", "100")
+    .option("-l, --limit <limit>", "limit number of results", argumentAsIntDefault(100))
     .option("--csv", "print results as csv")
     .option("--count", "print results count only")
     .action(async (options) => {
@@ -69,25 +69,24 @@ export function mintsCommand(program: Command): void {
       if (options.address) {
         where.minterAddresses = options.address;
       }
-      const limit = Math.min(parseInt(options.limit, 10), 10000);
-      let offset = 0;
-      let mintsPage = [];
-      let mintsFull: any = [];
-      do {
-        const mintsResult = await getZdk().mints({
-          pagination: { limit: Math.min(limit, 200), offset },
-          where: where,
-          filter: {},
-          sort: {
-            sortDirection: SortDirection.Desc,
-            sortKey: MintSortKey.Time,
-          },
-          includeFullDetails: false,
-        });
-        mintsPage = mintsResult.mints.nodes;
-        mintsFull = mintsFull.concat(mintsPage);
-        offset = mintsFull.length;
-      } while (mintsPage.length > 0 && mintsFull.length <= limit);
+
+      const mintsFull = await fetchLoop(
+        async (offset, limit) => {
+          const result = await getZdk().mints({
+            pagination: { limit: limit, offset },
+            where: where,
+            filter: {},
+            sort: {
+              sortDirection: SortDirection.Desc,
+              sortKey: MintSortKey.Time,
+            },
+            includeFullDetails: false,
+          });
+          return result.mints.nodes;
+        },
+        options.limit
+      );
+
       if (options.count) {
         console.log(mintsFull.length);
         return;

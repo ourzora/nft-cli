@@ -6,7 +6,7 @@ import {
   TokensQueryInput,
 } from "@zoralabs/zdk-alpha/dist/src/queries/queries-sdk";
 import { Command } from "commander";
-import { commaSeperatedList, getZdk, processResult } from "../utils";
+import { commaSeperatedList, fetchLoop, getZdk, processResult } from "../utils";
 
 const TOKENS_SORT_FIELD_MAP = {
   eth: TokenSortKey.EthPrice,
@@ -85,12 +85,9 @@ export function tokensCommand(program: Command) {
             } as TokenInput)
         );
       }
-      const limit = Math.min(parseInt(options.limit, 10), 10000);
-      let offset = 0;
-      let mintsPage = [];
-      let mintsFull: any = [];
-      do {
-        const mintsResult = await getZdk().tokens({
+
+      const tokensFull = await fetchLoop(async (offset, limit) => {
+        const result = await getZdk().tokens({
           pagination: { limit: Math.min(limit, 200), offset },
           where: where,
           filter: {},
@@ -100,18 +97,17 @@ export function tokensCommand(program: Command) {
           },
           includeFullDetails: false,
         });
-        mintsPage = mintsResult.tokens.nodes;
-        mintsFull = mintsFull.concat(mintsPage);
-        offset = mintsFull.length;
-      } while (mintsPage.length > 0 && mintsFull.length <= limit);
+        return result.tokens.nodes;
+      }, options.limit);
+
       if (options.count) {
-        console.log(mintsFull.length);
+        console.log(tokensFull.length);
         return;
       }
       processResult(
         options.fields,
         options.header,
         options.csv ? "csv" : "json"
-      )(mintsFull);
+      )(tokensFull);
     });
 }

@@ -4,10 +4,7 @@
   "main": "dist/index.js",
   "author": "iain <iain@zora.co>",
   "license": "MIT",
-  "bin": {
-    "@zoralabs/nft-cli": "bin/nft",
-    "nft": "bin/nft"
-  },
+  "bin": "./bin/nft",
   "publishConfig": {
     "access": "public"
   },
@@ -19,6 +16,7 @@
     "@zoralabs/zdk-alpha": "file:.yalc/@zoralabs/zdk-alpha",
     "chalk": "^5.0.1",
     "commander": "^9.2.0",
+    "gauge": "^4.0.4",
     "lodash": "^4.17.21",
     "ts-lib": "^0.0.5"
   },
