@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@types/lodash": "^4.14.182",
-    "@zoralabs/zdk-alpha": "file:.yalc/@zoralabs/zdk-alpha",
+    "@zoralabs/zdk-alpha": "^0.0.22",
     "chalk": "^5.0.1",
     "commander": "^9.2.0",
     "gauge": "^4.0.4",
