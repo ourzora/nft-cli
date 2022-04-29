@@ -6,7 +6,8 @@ import {
   TokensQueryInput,
 } from "@zoralabs/zdk-alpha/dist/src/queries/queries-sdk";
 import { Command } from "commander";
-import { commaSeperatedList, fetchLoop, getZdk, processResult } from "../utils";
+import { commaSeperatedList } from "../parsers";
+import { fetchLoop, getZdk, processResult } from "../utils";
 
 const TOKENS_SORT_FIELD_MAP = {
   eth: TokenSortKey.EthPrice,
