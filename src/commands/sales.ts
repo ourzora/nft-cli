@@ -23,11 +23,13 @@ export function salesCommand(program: Command) {
     .description("Gets a list of sales for given tokens")
     .option(
       "--seller <seller>",
-      "Seller address (seperate by comma if multiple)"
+      "Seller address (seperate by comma if multiple)",
+      commaSeperatedList
     )
     .option(
       "--collection <collection>",
-      "Collection address (seperate by comma if multiple)"
+      "Collection address (seperate by comma if multiple)",
+      commaSeperatedList
     )
     .option(
       "--token <token>",
@@ -67,8 +69,7 @@ export function salesCommand(program: Command) {
         sort.sortDirection = SortDirection.Asc;
       }
 
-      let where: SalesQueryInput = {};
-      let filter: SalesQueryFilter = {};
+      const where: SalesQueryInput = {};
       if (options.collection) {
         where.collectionAddresses = options.collection;
       }
@@ -88,14 +89,17 @@ export function salesCommand(program: Command) {
         );
       }
 
+      const filter: SalesQueryFilter = {};
       if (options.before || options.after) {
         filter.timeFilter = {};
         // date only
         if (options.before) {
-          filter.timeFilter.endDate = options.before.toISOString().slice(0, 10); 
+          filter.timeFilter.endDate = options.before.toISOString().slice(0, 10);
         }
         if (options.after) {
-          filter.timeFilter.startDate = options.after.toISOString().slice(0, 10);
+          filter.timeFilter.startDate = options.after
+            .toISOString()
+            .slice(0, 10);
         }
       }
 

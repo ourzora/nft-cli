@@ -25,11 +25,13 @@ export function tokensCommand(program: Command) {
     .description("Gets a list of tokens and associated data")
     .option(
       "--owner <owner>",
-      "Owned by address (seperate by comma if multiple)"
+      "Owned by address (seperate by comma if multiple)",
+      commaSeperatedList
     )
     .option(
       "--collection <collection>",
-      "Collection address (seperate by comma if multiple)"
+      "Collection address (seperate by comma if multiple)",
+      commaSeperatedList
     )
     .option(
       "--token <token>",
