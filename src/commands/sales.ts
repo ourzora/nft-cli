@@ -69,12 +69,7 @@ export function salesCommand(program: Command) {
         sort.sortDirection = SortDirection.Asc;
       }
 
-<<<<<<< HEAD
       const where: SalesQueryInput = {};
-=======
-      let where: SalesQueryInput = {};
-      let filter: SalesQueryFilter = {};
->>>>>>> origin/main
       if (options.collection) {
         where.collectionAddresses = options.collection;
       }
@@ -99,10 +94,12 @@ export function salesCommand(program: Command) {
         filter.timeFilter = {};
         // date only
         if (options.before) {
-          filter.timeFilter.endDate = options.before.toISOString().slice(0, 10); 
+          filter.timeFilter.endDate = options.before.toISOString().slice(0, 10);
         }
         if (options.after) {
-          filter.timeFilter.startDate = options.after.toISOString().slice(0, 10);
+          filter.timeFilter.startDate = options.after
+            .toISOString()
+            .slice(0, 10);
         }
       }
 
