@@ -18,7 +18,6 @@ export function getZdk() {
   return new ZDK();
 }
 
-
 export const networksDefault = [
   { network: Network.Ethereum, chain: Chain.Mainnet },
 ];
@@ -102,7 +101,17 @@ export function processResult(
         }
       }
       newResults.forEach((result: any) => {
-        console.log(fields.map((field) => get(result, field)).join(","));
+        console.log(
+          fields
+            .map((field) => {
+              const fieldResult = get(result, field);
+              if (typeof fieldResult === "string") {
+                return `"${fieldResult}"`;
+              }
+              return fieldResult;
+            })
+            .join(",")
+        );
       });
     } else {
       console.log(JSON.stringify(newResults, null, 2));
