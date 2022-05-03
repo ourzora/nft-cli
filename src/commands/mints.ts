@@ -1,10 +1,17 @@
 import {
   MintSortKey,
   MintSortKeySortInput,
+  MintsQueryFilter,
+  MintsQueryInput,
   SortDirection,
 } from "@zoralabs/zdk-alpha/dist/src/queries/queries-sdk";
 import { Command } from "commander";
-import { argumentAsIntDefault, commaSeperatedList, fetchLoop, getZdk, processResult } from "../utils";
+import {
+  argumentAsIntDefault,
+  commaSeperatedList,
+  parseHumanReadableDate,
+} from "../parsers";
+import { fetchLoop, getZdk, processResult } from "../utils";
 
 const MINTS_SORT_FIELD_MAP = {
   time: MintSortKey.Time,
@@ -34,12 +41,18 @@ export function mintsCommand(program: Command): void {
     )
     .option("--desc", "Sort descending (default)")
     .option("--asc", "Sort ascending (cannot be specified with desc)")
+    .option("--before <before>", "Before date", parseHumanReadableDate)
+    .option("--after <after>", "After date", parseHumanReadableDate)
     .option(
       "-F, --fields <fields>",
       "limit fields to show (useful for csv options)",
       commaSeperatedList
     )
-    .option("-l, --limit <limit>", "limit number of results", argumentAsIntDefault(100))
+    .option(
+      "-l, --limit <limit>",
+      "limit number of results",
+      argumentAsIntDefault(200)
+    )
     .option("--csv", "print results as csv")
     .option("--count", "print results count only")
     .action(async (options) => {
@@ -62,7 +75,7 @@ export function mintsCommand(program: Command): void {
         sort.sortDirection = SortDirection.Asc;
       }
 
-      let where: any = {};
+      let where: MintsQueryInput = {};
       if (options.collection) {
         where.collectionAddresses = options.collection;
       }
@@ -70,22 +83,33 @@ export function mintsCommand(program: Command): void {
         where.minterAddresses = options.address;
       }
 
-      const mintsFull = await fetchLoop(
-        async (offset, limit) => {
-          const result = await getZdk().mints({
-            pagination: { limit: limit, offset },
-            where: where,
-            filter: {},
-            sort: {
-              sortDirection: SortDirection.Desc,
-              sortKey: MintSortKey.Time,
-            },
-            includeFullDetails: false,
-          });
-          return result.mints.nodes;
-        },
-        options.limit
-      );
+      let filter: MintsQueryFilter = {};
+      if (options.before || options.after) {
+        filter.timeFilter = {};
+        // date only
+        if (options.before) {
+          filter.timeFilter.endDate = options.before.toISOString().slice(0, 10);
+        }
+        if (options.after) {
+          filter.timeFilter.startDate = options.after
+            .toISOString()
+            .slice(0, 10);
+        }
+      }
+
+      const mintsFull = await fetchLoop(async (offset, limit) => {
+        const result = await getZdk().mints({
+          pagination: { limit: limit, offset },
+          where: where,
+          filter: {},
+          sort: {
+            sortDirection: SortDirection.Desc,
+            sortKey: MintSortKey.Time,
+          },
+          includeFullDetails: false,
+        });
+        return result.mints.nodes;
+      }, options.limit);
 
       if (options.count) {
         console.log(mintsFull.length);
