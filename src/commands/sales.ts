@@ -7,7 +7,8 @@ import {
   TokenInput,
 } from "@zoralabs/zdk-alpha/dist/src/queries/queries-sdk";
 import { Command } from "commander";
-import { commaSeperatedList, fetchLoop, getZdk, processResult } from "../utils";
+import { commaSeperatedList, parseHumanReadableDate } from "../parsers";
+import { fetchLoop, getZdk, processResult } from "../utils";
 
 const SALES_SORT_FIELD_MAP = {
   eth: SaleSortKey.EthPrice,
@@ -40,6 +41,8 @@ export function salesCommand(program: Command) {
     .option("-l, --limit <limit>", "limit number of results", "100")
     .option("--csv", "print results as csv")
     .option("--count", "Print only result count")
+    .option("--before <before>", "Before date", parseHumanReadableDate)
+    .option("--after <after>", "After date", parseHumanReadableDate)
     .option(
       "--sort <sort>",
       `Sort field (accepted: ${Object.keys(SALES_SORT_FIELD_MAP).join(", ")})`
@@ -66,7 +69,12 @@ export function salesCommand(program: Command) {
         sort.sortDirection = SortDirection.Asc;
       }
 
+<<<<<<< HEAD
       const where: SalesQueryInput = {};
+=======
+      let where: SalesQueryInput = {};
+      let filter: SalesQueryFilter = {};
+>>>>>>> origin/main
       if (options.collection) {
         where.collectionAddresses = options.collection;
       }
@@ -91,12 +99,10 @@ export function salesCommand(program: Command) {
         filter.timeFilter = {};
         // date only
         if (options.before) {
-          filter.timeFilter.endDate = options.before.toISOString().slice(0, 10);
+          filter.timeFilter.endDate = options.before.toISOString().slice(0, 10); 
         }
         if (options.after) {
-          filter.timeFilter.startDate = options.after
-            .toISOString()
-            .slice(0, 10);
+          filter.timeFilter.startDate = options.after.toISOString().slice(0, 10);
         }
       }
 
@@ -104,7 +110,7 @@ export function salesCommand(program: Command) {
         const result = await getZdk().sales({
           pagination: { limit: Math.min(limit, 200), offset },
           where: where,
-          filter: {},
+          filter: filter,
           sort: {
             sortDirection: SortDirection.Desc,
             sortKey: SaleSortKey.None,

@@ -1,5 +1,6 @@
 import { Command } from "commander";
-import { commaSeperatedList, getZdk, networksDefault } from "../utils";
+import { commaSeperatedList } from "../parsers";
+import { getZdk, networksDefault } from "../utils";
 
 export function aggregationCommands(program: Command) {
   program

@@ -3,7 +3,6 @@ import {
   Chain,
   Network,
 } from "@zoralabs/zdk-alpha/dist/src/queries/queries-sdk";
-import { InvalidArgumentError } from "commander";
 import { get, isObject, flatMap } from "lodash";
 // @ts-ignore
 import Gauge from "gauge";
@@ -19,23 +18,6 @@ export function getZdk() {
   return new ZDK();
 }
 
-export function commaSeperatedList(value: string, _previous: any) {
-  return value.split(",");
-}
-
-export function argumentAsIntDefault(defaultInt: number) {
-  return (value: string, _previous: any) => {
-    if (!value) {
-      return defaultInt;
-    }
-    // parseInt takes a string and a radix
-    const parsedValue = parseInt(value, 10);
-    if (isNaN(parsedValue)) {
-      throw new InvalidArgumentError("Not a number.");
-    }
-    return parsedValue;
-  };
-}
 
 export const networksDefault = [
   { network: Network.Ethereum, chain: Chain.Mainnet },
