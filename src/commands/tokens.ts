@@ -4,7 +4,7 @@ import {
   TokenSortInput,
   TokenSortKey,
   TokensQueryInput,
-} from "@zoralabs/zdk-alpha/dist/src/queries/queries-sdk";
+} from "@zoralabs/zdk-alpha/dist/queries/queries-sdk";
 import { Command } from "commander";
 import { commaSeperatedList } from "../parsers";
 import { fetchLoop, getZdk, processResult } from "../utils";

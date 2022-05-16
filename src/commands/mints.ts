@@ -4,7 +4,7 @@ import {
   MintsQueryFilter,
   MintsQueryInput,
   SortDirection,
-} from "@zoralabs/zdk-alpha/dist/src/queries/queries-sdk";
+} from "@zoralabs/zdk-alpha/dist/queries/queries-sdk";
 import { Command } from "commander";
 import {
   argumentAsIntDefault,

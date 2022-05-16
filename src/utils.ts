@@ -1,8 +1,8 @@
-import { ZDK } from "@zoralabs/zdk-alpha/dist/src";
+import { ZDK } from "@zoralabs/zdk-alpha";
 import {
   Chain,
   Network,
-} from "@zoralabs/zdk-alpha/dist/src/queries/queries-sdk";
+} from "@zoralabs/zdk-alpha/dist/queries/queries-sdk";
 import { get, isObject, flatMap } from "lodash";
 // @ts-ignore
 import Gauge from "gauge";
