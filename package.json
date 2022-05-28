@@ -1,6 +1,6 @@
 {
   "name": "@zoralabs/nft-cli",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "dist/index.js",
   "author": "iain <iain@zora.co>",
   "license": "MIT",
@@ -20,7 +20,7 @@
   ],
   "dependencies": {
     "@types/lodash": "^4.14.182",
-    "@zoralabs/zdk-alpha": "^0.0.36",
+    "@zoralabs/zdk-alpha": "^0.0.40",
     "chalk": "^5.0.1",
     "chrono-node": "2.3.8",
     "commander": "^9.2.0",

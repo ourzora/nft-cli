@@ -7,13 +7,13 @@
   resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.182.tgz"
   integrity sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==
 
-"@zoralabs/zdk-alpha@^0.0.36":
-  version "0.0.36"
-  resolved "https://registry.npmjs.org/@zoralabs/zdk-alpha/-/zdk-alpha-0.0.36.tgz"
-  integrity sha512-lR1L9ivDfRlSPMZA3YlA6Ev87+VkTlQim32PyV4+UKWXOfmobOAVj7UXUzZggMhuOC+WrYWoCyizle3Yy1Of8g==
+"@zoralabs/zdk-alpha@^0.0.40":
+  version "0.0.40"
+  resolved "https://registry.yarnpkg.com/@zoralabs/zdk-alpha/-/zdk-alpha-0.0.40.tgz#c08e45c95ddf1061eedd92ae846dbb5a59de1e10"
+  integrity sha512-bWeGy8oCl8dpDcmGwPOS5vAjNYBHZhH00PGIfs47104xT/4Lft3eGX5lMzjxFxdJtmXajzSkLza1IMBikDcIEQ==
   dependencies:
     big.js "^6.1.0"
-    graphql "^16.4.0"
+    graphql "^16.5.0"
     graphql-request "^4.2.0"
     graphql-tag "^2.12.6"
     tslib "^2.2.0"
@@ -138,9 +138,9 @@ graphql-tag@^2.12.6:
   dependencies:
     tslib "^2.1.0"
 
-graphql@^16.4.0:
+graphql@^16.5.0:
   version "16.5.0"
-  resolved "https://registry.npmjs.org/graphql/-/graphql-16.5.0.tgz"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.5.0.tgz#41b5c1182eaac7f3d47164fb247f61e4dfb69c85"
   integrity sha512-qbHgh8Ix+j/qY+a/ZcJnFQ+j8ezakqPiHwPiZhV/3PgGlgf96QMBB5/f2rkiC9sgLoy/xvT6TSiaf2nTHJh5iA==
 
 has-unicode@^2.0.1:
