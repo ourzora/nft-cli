@@ -4,13 +4,13 @@ import {
   TokenSortInput,
   TokenSortKey,
   TokensQueryInput,
-} from "@zoralabs/zdk-alpha/dist/queries/queries-sdk";
+} from "@zoralabs/zdk/dist/queries/queries-sdk";
 import { Command } from "commander";
 import { commaSeperatedList } from "../parsers";
 import { fetchLoop, getZdk, processResult } from "../utils";
 
 const TOKENS_SORT_FIELD_MAP = {
-  eth: TokenSortKey.EthPrice,
+  eth: TokenSortKey.ChainTokenPrice,
   minted: TokenSortKey.Minted,
   price: TokenSortKey.NativePrice,
   none: TokenSortKey.None,
@@ -89,9 +89,9 @@ export function tokensCommand(program: Command) {
         );
       }
 
-      const tokensFull = await fetchLoop(async (offset, limit) => {
+      const tokensFull = await fetchLoop(async (after, limit) => {
         const result = await getZdk().tokens({
-          pagination: { limit: Math.min(limit, 200), offset },
+          pagination: { limit: Math.min(limit, 400), after },
           where: where,
           filter: {},
           sort: {
@@ -100,7 +100,11 @@ export function tokensCommand(program: Command) {
           },
           includeFullDetails: false,
         });
-        return result.tokens.nodes;
+
+        return [
+          result.tokens.nodes,
+          result.tokens.pageInfo.endCursor || undefined,
+        ];
       }, options.limit);
 
       if (options.count) {

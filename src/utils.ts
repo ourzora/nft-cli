@@ -1,8 +1,8 @@
-import { ZDK } from "@zoralabs/zdk-alpha";
+import { ZDK } from "@zoralabs/zdk";
 import {
   Chain,
   Network,
-} from "@zoralabs/zdk-alpha/dist/queries/queries-sdk";
+} from "@zoralabs/zdk/dist/queries/queries-sdk";
 import { get, isObject, flatMap } from "lodash";
 // @ts-ignore
 import Gauge from "gauge";
@@ -23,7 +23,7 @@ export const networksDefault = [
 ];
 
 export async function fetchLoop<T>(
-  fetchFn: (offset: number, limit: number) => Promise<T[]>,
+  fetchFn: (after: string | undefined, limit: number) => Promise<[T[], string | undefined]>,
   userLimit: number,
   maxLimit = 10000
 ) {
@@ -60,12 +60,13 @@ export async function fetchLoop<T>(
   gauge.show("Fetching...");
 
   const fullLimit = Math.min(userLimit, maxLimit);
-  let offset = 0;
+  let last: string | undefined;
   do {
-    mintsPage = await fetchFn(offset, Math.min(fullLimit, PAGE_LIMIT));
+    // @ts-ignore
+    const [mintsPage, endCursor] = await fetchFn(last, Math.min(fullLimit, PAGE_LIMIT));
     pageCount += 1;
     mintsFull = mintsFull.concat(mintsPage);
-    offset = mintsFull.length;
+    last = endCursor;
   } while (mintsPage.length > 0 && mintsFull.length <= fullLimit);
 
   clearInterval(pulseInterval);

@@ -5,13 +5,13 @@ import {
   SalesQueryInput,
   SortDirection,
   TokenInput,
-} from "@zoralabs/zdk-alpha/dist/queries/queries-sdk";
+} from "@zoralabs/zdk/dist/queries/queries-sdk";
 import { Command } from "commander";
 import { commaSeperatedList, parseHumanReadableDate } from "../parsers";
 import { fetchLoop, getZdk, processResult } from "../utils";
 
 const SALES_SORT_FIELD_MAP = {
-  eth: SaleSortKey.EthPrice,
+  eth: SaleSortKey.ChainTokenPrice,
   price: SaleSortKey.NativePrice,
   time: SaleSortKey.Time,
   none: SaleSortKey.None,
@@ -103,9 +103,9 @@ export function salesCommand(program: Command) {
         }
       }
 
-      const salesFull = await fetchLoop(async (offset, limit) => {
+      const salesFull = await fetchLoop(async (after, limit) => {
         const result = await getZdk().sales({
-          pagination: { limit: Math.min(limit, 200), offset },
+          pagination: { limit: Math.min(limit, 200), after },
           where: where,
           filter: filter,
           sort: {
@@ -114,7 +114,10 @@ export function salesCommand(program: Command) {
           },
           includeFullDetails: false,
         });
-        return result.sales.nodes;
+        return [
+          result.sales.nodes,
+          result.sales.pageInfo.endCursor || undefined,
+        ];
       }, options.limit);
 
       if (options.count) {

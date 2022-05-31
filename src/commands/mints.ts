@@ -4,7 +4,7 @@ import {
   MintsQueryFilter,
   MintsQueryInput,
   SortDirection,
-} from "@zoralabs/zdk-alpha/dist/queries/queries-sdk";
+} from "@zoralabs/zdk/dist/queries/queries-sdk";
 import { Command } from "commander";
 import {
   argumentAsIntDefault,
@@ -97,9 +97,9 @@ export function mintsCommand(program: Command): void {
         }
       }
 
-      const mintsFull = await fetchLoop(async (offset, limit) => {
+      const mintsFull = await fetchLoop(async (after, limit) => {
         const result = await getZdk().mints({
-          pagination: { limit: limit, offset },
+          pagination: { limit: limit, after },
           where: where,
           filter: {},
           sort: {
@@ -108,7 +108,10 @@ export function mintsCommand(program: Command): void {
           },
           includeFullDetails: false,
         });
-        return result.mints.nodes;
+        return [
+          result.mints.nodes,
+          result.mints.pageInfo.endCursor || undefined,
+        ];
       }, options.limit);
 
       if (options.count) {

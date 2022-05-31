@@ -18,6 +18,17 @@
     graphql-tag "^2.12.6"
     tslib "^2.2.0"
 
+"@zoralabs/zdk@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@zoralabs/zdk/-/zdk-2.0.0.tgz#bfd3f71253e15a43128ae4a82c1a0ab1dfe7c9c6"
+  integrity sha512-rNZwWLLl+OCj6k0FK0sCGP+n4ji8mrZRBUJja4RELtgiBG/gdt1+2atDRFYkoUR/3DLkvspwDs4gX3F6IyM7Cg==
+  dependencies:
+    big.js "^6.1.0"
+    graphql "^16.5.0"
+    graphql-request "^4.2.0"
+    graphql-tag "^2.12.6"
+    tslib "^2.2.0"
+
 ansi-regex@^5.0.1:
   version "5.0.1"
   resolved "https://registry.npmjs.org/ansi-regex/-/ansi-regex-5.0.1.tgz"
