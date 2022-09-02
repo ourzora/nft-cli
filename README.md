@@ -18,7 +18,7 @@ Query for collection data en masse with JSON and CSV output for data analysis, a
 
  * `nft tokens --owner tyson.eth,isiain.eth --limit 10000`
 
- * `nft sales --owner isiain.eth --limit 100`
+ * `nft sales --seller isiain.eth --limit 100`
 ### What powers this?
 
 The backend for this is powered by `https://api.zora.co/graphql`.
