@@ -71,7 +71,7 @@ export async function fetchLoop<T>(
     pageCount += 1;
     mintsFull = mintsFull.concat(mintsPage);
     last = endCursor;
-    console.error({endCursor, pageCount, mintsPageCount, size: mintsFull.length})
+    // console.error({endCursor, pageCount, mintsPageCount, size: mintsFull.length})
   } while (mintsPageCount > 0 && mintsFull.length <= fullLimit);
 
   clearInterval(pulseInterval);
