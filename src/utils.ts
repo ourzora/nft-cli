@@ -1,8 +1,5 @@
 import { ZDK } from "@zoralabs/zdk";
-import {
-  Chain,
-  Network,
-} from "@zoralabs/zdk/dist/queries/queries-sdk";
+import { Chain, Network } from "@zoralabs/zdk/dist/queries/queries-sdk";
 import { get, isObject, flatMap } from "lodash";
 // @ts-ignore
 import Gauge from "gauge";
@@ -14,8 +11,8 @@ const getSchema: any = (val: any, keys = []) =>
     ? flatMap(val, (v, k) => getSchema(v, [...keys, k])) // iterate it and call fn with the value and the collected keys
     : keys.join("."); // return the joined keys
 
-export function getZdk() {
-  return new ZDK();
+export function getZdk(apiKey = undefined) {
+  return new ZDK({ apiKey });
 }
 
 export const networksDefault = [
@@ -23,12 +20,14 @@ export const networksDefault = [
 ];
 
 export async function fetchLoop<T>(
-  fetchFn: (after: string | undefined, limit: number) => Promise<[T[], string | undefined]>,
+  fetchFn: (
+    after: string | undefined,
+    limit: number
+  ) => Promise<[T[], string | undefined]>,
   userLimit: number,
-  maxLimit = 10000
+  maxLimit = 100000
 ) {
   let mintsFull: T[] = [];
-  let mintsPage: T[] = [];
 
   const gauge = new Gauge();
 
@@ -61,13 +60,19 @@ export async function fetchLoop<T>(
 
   const fullLimit = Math.min(userLimit, maxLimit);
   let last: string | undefined;
+  let mintsPageCount;
   do {
     // @ts-ignore
-    const [mintsPage, endCursor] = await fetchFn(last, Math.min(fullLimit, PAGE_LIMIT));
+    const [mintsPage, endCursor] = await fetchFn(
+      last,
+      Math.min(fullLimit, PAGE_LIMIT)
+    );
+    mintsPageCount = mintsPage.length;
     pageCount += 1;
     mintsFull = mintsFull.concat(mintsPage);
     last = endCursor;
-  } while (mintsPage.length > 0 && mintsFull.length <= fullLimit);
+    console.error({endCursor, pageCount, mintsPageCount, size: mintsFull.length})
+  } while (mintsPageCount > 0 && mintsFull.length <= fullLimit);
 
   clearInterval(pulseInterval);
   gauge.hide();

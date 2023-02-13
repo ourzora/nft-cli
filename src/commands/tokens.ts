@@ -23,6 +23,7 @@ export function tokensCommand(program: Command) {
   program
     .command("tokens")
     .description("Gets a list of tokens and associated data")
+    .option('--api-key <key>', 'API Key for ZDK')
     .option(
       "--owner <owner>",
       "Owned by address (seperate by comma if multiple)",
@@ -90,8 +91,8 @@ export function tokensCommand(program: Command) {
       }
 
       const tokensFull = await fetchLoop(async (after, limit) => {
-        const result = await getZdk().tokens({
-          pagination: { limit: Math.min(limit, 400), after },
+        const result = await getZdk(options.apiKey).tokens({
+          pagination: { limit, after },
           where: where,
           filter: {},
           sort: {
