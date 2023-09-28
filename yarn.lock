@@ -7,10 +7,10 @@
   resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.182.tgz"
   integrity sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==
 
-"@zoralabs/zdk@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@zoralabs/zdk/-/zdk-2.2.0.tgz#559d7372be90e8ca9d4525069879029f9fc0d386"
-  integrity sha512-rhQXOu0flDgEGboZX1p7/+7CGZaU3WYNz/ZDT0e0UMlNEZyjx/WBY+u5ioji/qIAg0wcV/TNhOnEI+bhgRaeVA==
+"@zoralabs/zdk@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@zoralabs/zdk/-/zdk-2.2.1.tgz#26dd2c1c08efa69871f107c18b2cde71d66391bb"
+  integrity sha512-sP0cWnJrHz6iCnq/VnJoE6lNG84OJTSFMhZwpD0nyoi4054SIlDf7v5RPE0RwRhZZskAZRvhR6y4wyvK5nsUNQ==
   dependencies:
     big.js "^6.1.0"
     graphql "^16.5.0"
